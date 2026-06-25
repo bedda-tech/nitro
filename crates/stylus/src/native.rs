@@ -34,6 +34,8 @@ use wasmer::{
 };
 use wasmer_vm::VMExtern;
 
+mod aivm;
+
 use crate::{
     cache::InitCache,
     env::{MeterData, WasmEnv},
@@ -228,6 +230,17 @@ impl<D: DataReader, E: EvmApi<D>> NativeInstance<D, E> {
             imports.define("debug", "start_benchmark", func!(host::start_benchmark));
             imports.define("debug", "end_benchmark", func!(host::end_benchmark));
         }
+        // KRAIN AIVM host functions â tensor precompiles for MNIST MLP.
+        // These are resolved when executing Stylus contracts that declare
+        // `#[link(wasm_import_module = "krain_aivm")]` imports.
+        imports.define("krain_aivm", "aivm_fc1_linear",        func!(aivm::aivm_fc1_linear));
+        imports.define("krain_aivm", "aivm_relu_512",           func!(aivm::aivm_relu_512));
+        imports.define("krain_aivm", "aivm_dropout_noop_512",  func!(aivm::aivm_dropout_noop_512));
+        imports.define("krain_aivm", "aivm_fc2_linear",        func!(aivm::aivm_fc2_linear));
+        imports.define("krain_aivm", "aivm_relu_128",          func!(aivm::aivm_relu_128));
+        imports.define("krain_aivm", "aivm_dropout_noop_128",  func!(aivm::aivm_dropout_noop_128));
+        imports.define("krain_aivm", "aivm_fc3_linear",        func!(aivm::aivm_fc3_linear));
+        imports.define("krain_aivm", "aivm_argmax_result",     func!(aivm::aivm_argmax_result));
         let instance = Instance::new(&mut store, &module, &imports)?;
         let exports = &instance.exports;
         let memory = exports.get_memory("memory")?.clone();
