@@ -36,6 +36,7 @@ mod cache;
 mod evm_api;
 mod target_cache;
 mod util;
+mod aivm;
 
 #[cfg(test)]
 mod test;
