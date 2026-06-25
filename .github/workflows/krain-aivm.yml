@@ -8,7 +8,8 @@ on:
 jobs:
   build:
     name: Build & push krain-nitro-dev image
-    runs-on: ubuntu-24.04-64core
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
     permissions:
       contents: read
       packages: write
