@@ -30,6 +30,7 @@ wasmer-compiler-llvm = { workspace = true, optional = true }
 wasmer-compiler-singlepass = { workspace = true, features = ["std", "unwind", "avx"] }
 wasmer-types = { workspace = true }
 wasmer-vm = { workspace = true }
+krain-aivm = { path = "../krain-aivm" }
 
 [dev-dependencies]
 num-bigint = { workspace = true }
