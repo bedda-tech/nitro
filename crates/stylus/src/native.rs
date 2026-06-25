@@ -34,7 +34,7 @@ use wasmer::{
 };
 use wasmer_vm::VMExtern;
 
-mod aivm;
+use crate::aivm;
 
 use crate::{
     cache::InitCache,
