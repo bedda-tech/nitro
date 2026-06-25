@@ -38,9 +38,9 @@ fn read_mem<D: DataReader, E: EvmApi<D>>(
 ) -> Option<Vec<u8>> {
     let (data, store) = env.data_and_store_mut();
     let memory = data.memory.as_ref()?.clone();
-    let view = memory.view(store);
+    let view = memory.view(&store);
     let mut buf = vec![0u8; len];
-    view.read(ptr as u64, &mut buf).ok()?;
+    view.read(u64::from(ptr), &mut buf).ok()?;
     Some(buf)
 }
 
@@ -54,8 +54,8 @@ fn write_mem<D: DataReader, E: EvmApi<D>>(
         Some(m) => m.clone(),
         None => return false,
     };
-    let view = memory.view(store);
-    view.write(ptr as u64, data_bytes).is_ok()
+    let view = memory.view(&store);
+    view.write(u64::from(ptr), data_bytes).is_ok()
 }
 
 // ── Dispatch helper ─────────────────────────────────────────────────────────────────────────────────
