@@ -9,6 +9,7 @@ members = [
     "crates/prover",
     "crates/prover-ffi",
     "crates/stylus",
+    "crates/krain-aivm",
     "crates/validator",
     "crates/wasm-libraries/arbcompress",
     "crates/wasm-libraries/arbcrypto",
