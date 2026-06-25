@@ -13,5 +13,3 @@ description = "KRAIN Nitro fork: AIVM host function implementations for MNIST ML
 crate-type = ["lib"]
 
 [dependencies]
-bytemuck = "1"
-
