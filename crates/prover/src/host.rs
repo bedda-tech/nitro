@@ -61,6 +61,24 @@ pub enum Hostio {
     UserInkLeft,
     UserInkStatus,
     UserSetInk,
+    // KRAIN AIVM — MLP tensor host functions (prover stubs; native Wasmer impl in crates/stylus/src/aivm.rs)
+    KrainAivmFc1Linear,
+    KrainAivmRelu512,
+    KrainAivmDropoutNoop512,
+    KrainAivmFc2Linear,
+    KrainAivmRelu128,
+    KrainAivmDropoutNoop128,
+    KrainAivmFc3Linear,
+    KrainAivmArgmaxResult,
+    // KRAIN AIVM — Transformer tensor host functions
+    KrainAivmTxfEmbed,
+    KrainAivmTxfAttnQkv,
+    KrainAivmTxfAttnOut,
+    KrainAivmTxfAttnResidual,
+    KrainAivmTxfLayernorm1,
+    KrainAivmTxfFfnForward,
+    KrainAivmTxfFfnResidual,
+    KrainAivmTxfClassify,
 }
 
 impl FromStr for Hostio {
@@ -111,6 +129,22 @@ impl FromStr for Hostio {
             ("console", "tee_i64") => ConsoleTeeI64,
             ("console", "tee_f32") => ConsoleTeeF32,
             ("console", "tee_f64") => ConsoleTeeF64,
+            ("krain_aivm", "aivm_fc1_linear")        => KrainAivmFc1Linear,
+            ("krain_aivm", "aivm_relu_512")          => KrainAivmRelu512,
+            ("krain_aivm", "aivm_dropout_noop_512")  => KrainAivmDropoutNoop512,
+            ("krain_aivm", "aivm_fc2_linear")        => KrainAivmFc2Linear,
+            ("krain_aivm", "aivm_relu_128")          => KrainAivmRelu128,
+            ("krain_aivm", "aivm_dropout_noop_128")  => KrainAivmDropoutNoop128,
+            ("krain_aivm", "aivm_fc3_linear")        => KrainAivmFc3Linear,
+            ("krain_aivm", "aivm_argmax_result")     => KrainAivmArgmaxResult,
+            ("krain_aivm", "aivm_txf_embed")         => KrainAivmTxfEmbed,
+            ("krain_aivm", "aivm_txf_attn_qkv")      => KrainAivmTxfAttnQkv,
+            ("krain_aivm", "aivm_txf_attn_out")      => KrainAivmTxfAttnOut,
+            ("krain_aivm", "aivm_txf_attn_residual") => KrainAivmTxfAttnResidual,
+            ("krain_aivm", "aivm_txf_layernorm1")    => KrainAivmTxfLayernorm1,
+            ("krain_aivm", "aivm_txf_ffn_forward")   => KrainAivmTxfFfnForward,
+            ("krain_aivm", "aivm_txf_ffn_residual")  => KrainAivmTxfFfnResidual,
+            ("krain_aivm", "aivm_txf_classify")      => KrainAivmTxfClassify,
             _ => bail!("no such hostio {} in {}", name.red(), module.red()),
         })
     }
@@ -175,6 +209,22 @@ impl Hostio {
             UserInkLeft                 => InternalFunc::UserInkLeft.ty(),
             UserInkStatus               => InternalFunc::UserInkStatus.ty(),
             UserSetInk                  => InternalFunc::UserSetInk.ty(),
+            KrainAivmFc1Linear
+            | KrainAivmRelu512
+            | KrainAivmDropoutNoop512
+            | KrainAivmFc2Linear
+            | KrainAivmRelu128
+            | KrainAivmDropoutNoop128
+            | KrainAivmFc3Linear
+            | KrainAivmArgmaxResult
+            | KrainAivmTxfEmbed
+            | KrainAivmTxfAttnQkv
+            | KrainAivmTxfAttnOut
+            | KrainAivmTxfAttnResidual
+            | KrainAivmTxfLayernorm1
+            | KrainAivmTxfFfnForward
+            | KrainAivmTxfFfnResidual
+            | KrainAivmTxfClassify      => func!([I32, I32, I32, I32, I32], [I32]),
         };
         ty
     }
@@ -379,6 +429,26 @@ impl Hostio {
             ConsoleLogTxt | ConsoleLogI32 | ConsoleLogI64 | ConsoleLogF32 | ConsoleLogF64 => {}
             ConsoleTeeI32 | ConsoleTeeI64 | ConsoleTeeF32 | ConsoleTeeF64 => {
                 opcode!(LocalGet, 0);
+            }
+            KrainAivmFc1Linear
+            | KrainAivmRelu512
+            | KrainAivmDropoutNoop512
+            | KrainAivmFc2Linear
+            | KrainAivmRelu128
+            | KrainAivmDropoutNoop128
+            | KrainAivmFc3Linear
+            | KrainAivmArgmaxResult
+            | KrainAivmTxfEmbed
+            | KrainAivmTxfAttnQkv
+            | KrainAivmTxfAttnOut
+            | KrainAivmTxfAttnResidual
+            | KrainAivmTxfLayernorm1
+            | KrainAivmTxfFfnForward
+            | KrainAivmTxfFfnResidual
+            | KrainAivmTxfClassify => {
+                // Prover stub: returns -1. The native Wasmer host fn in
+                // crates/stylus/src/aivm.rs executes the real tensor op at runtime.
+                opcode!(I32Const, 0xffffffff_u64);
             }
         }
         body
