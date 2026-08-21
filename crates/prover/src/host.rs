@@ -464,7 +464,7 @@ pub fn get_impl(module: &str, name: &str) -> Result<(Function, bool)> {
         Ok(())
     };
 
-    let debug = module == "console" || module == "debug";
+    let debug = module == "console" || module == "debug" || module == "krain_aivm";
     Function::new(&[], append, hostio.ty(), &[]).map(|x| (x, debug))
 }
 

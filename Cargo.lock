@@ -2852,6 +2852,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "krain-aivm"
+version = "0.1.0"
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4814,6 +4818,7 @@ dependencies = [
  "derivative",
  "eyre",
  "hex",
+ "krain-aivm",
  "lazy_static",
  "num-bigint",
  "parking_lot",
